@@ -11,14 +11,6 @@ imagen_deporte VARCHAR(25)
 );
 
 
--- inserciones de la tabla deportes 
-INSERT INTO tb_deportes (nombre_deporte) VALUES 
-('Fútbol'),
-('Baloncesto'),
-('Deportes de raqueta'),
-('Natación'),
-('Voleibol');
-
 
 
 CREATE TABLE tb_clientes (
