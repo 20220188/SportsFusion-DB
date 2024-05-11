@@ -42,6 +42,10 @@ id_talla INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 talla VARCHAR(10)
 );
 
+CREATE TABLE tb_generos(
+id_genero INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+genero VARCHAR(10)
+);
 
 /*Tpo de producto es para definir si son coleccionable o de actualidad*/
 CREATE TABLE tb_categorias(
@@ -82,7 +86,11 @@ REFERENCES tb_tipo_productos (id_tipo_producto),
 id_categoria INT,
 CONSTRAINT FK_categoria_producto
 FOREIGN KEY(id_categoria) 
-REFERENCES tb_categorias (id_categoria)
+REFERENCES tb_categorias (id_categoria),
+id_genero INT,
+CONSTRAINT FK_genero_producto
+FOREIGN KEY(id_genero) 
+REFERENCES tb_generos (id_genero)
 );
 
 
