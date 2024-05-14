@@ -6,9 +6,10 @@ USE sportfusionDB;
 CREATE TABLE tb_deportes (
 id_deporte INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 nombre_deporte VARCHAR(25),
-estado_retro BOOLEAN,
+estado_retro TINYINT(1),
 imagen_deporte VARCHAR(25)
 );
+
 
 
 
@@ -42,10 +43,6 @@ id_talla INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 talla VARCHAR(10)
 );
 
-CREATE TABLE tb_generos(
-id_genero INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-genero VARCHAR(10)
-);
 
 /*Tpo de producto es para definir si son coleccionable o de actualidad*/
 CREATE TABLE tb_categorias(
@@ -71,6 +68,10 @@ comentario VARCHAR(250),
 opinion FLOAT
 ); 
 
+CREATE TABLE tb_generos(
+id_genero INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+genero VARCHAR(10)
+);
 
 
 CREATE TABLE tb_productos(
@@ -78,20 +79,21 @@ id_producto INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 nombre_producto VARCHAR(30),
 descripcion VARCHAR(250),
 imagen VARCHAR(30),
-genero VARCHAR(20),
-id_tipo_producto INT,
-CONSTRAINT FK_tipoP_productos 
-FOREIGN KEY(id_tipo_producto) 
-REFERENCES tb_tipo_productos (id_tipo_producto),
 id_categoria INT,
 CONSTRAINT FK_categoria_producto
 FOREIGN KEY(id_categoria) 
 REFERENCES tb_categorias (id_categoria),
-id_genero INT,
-CONSTRAINT FK_genero_producto
-FOREIGN KEY(id_genero) 
-REFERENCES tb_generos (id_genero)
+id_tipo_producto INT,
+CONSTRAINT FK_tipoP_productos 
+FOREIGN KEY(id_tipo_producto) 
+REFERENCES tb_tipo_productos (id_tipo_producto),
+id_deporte INT,
+CONSTRAINT FK_deporte_producto 
+FOREIGN KEY(id_deporte) 
+REFERENCES tb_deportes(id_deporte)
 );
+
+SELECT * FROM tb_productos;
 
 
 /* detalle productos lleva precio, stock y llave foranea de tallas*/
@@ -104,8 +106,21 @@ CONSTRAINT check_stock CHECK(cantidad_disponible >= 0),
 id_talla INT,
 CONSTRAINT FK_talla_detalle_producto
 FOREIGN KEY(id_talla)
-REFERENCES tb_tallas (id_talla)
+REFERENCES tb_tallas (id_talla),
+id_genero INT,
+CONSTRAINT FK_genero_producto
+FOREIGN KEY(id_genero) 
+REFERENCES tb_generos (id_genero),
+id_producto INT,
+CONSTRAINT FK_detalleP_producto
+FOREIGN KEY(id_producto) 
+REFERENCES tb_productos (id_producto)
 );
+
+SELECT * FROM tb_detalle_productos;
+
+
+
 
 CREATE TABLE tb_valoraciones_productos(
 id_valoracion_producto INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -139,13 +154,15 @@ REFERENCES tb_deportes (id_deporte)
 );
 
 
-
+CREATE TABLE tb_estado_pedidos(
+id_estado_pedido INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+estado_pedido VARCHAR(15)
+);
 
 
 CREATE TABLE tb_pedidos (
 id_pedido INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 direccion_pedido VARCHAR(250),
-estado_pedido ENUM('Pendiente', 'Finalizado', 'Entregado', 'Anulado'),
 fecha_registro DATE,
 id_cliente INT,
 CONSTRAINT FK_pedido_cliente
@@ -166,7 +183,11 @@ REFERENCES tb_pedidos (id_pedido),
 id_producto INT, 
 CONSTRAINT FK_detalle_producto
 FOREIGN KEY(id_producto)
-REFERENCES tb_productos (id_producto)
+REFERENCES tb_productos (id_producto),
+id_estado_pedido INT,
+CONSTRAINT FK_estado_pedido
+FOREIGN KEY(id_estado_pedido)
+REFERENCES tb_estado_pedidos (id_estado_pedido)
 );
 
 
