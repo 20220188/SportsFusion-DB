@@ -118,13 +118,17 @@ REFERENCES tb_tipo_productos (id_tipo_producto),
 id_deporte INT,
 CONSTRAINT FK_deporte_producto 
 FOREIGN KEY(id_deporte) 
-REFERENCES tb_deportes(id_deporte)
+REFERENCES tb_deportes(id_deporte),
+id_genero INT,
+CONSTRAINT FK_genero_producto
+FOREIGN KEY(id_genero) 
+REFERENCES tb_generos (id_genero)
 );
 
-insert INTO tb_productos(nombre_producto, descripcion, imagen, id_categoria, id_tipo_producto, id_deporte)
-VALUES('Jersey FC Barcelona', 'Jersey del mejor equipo', 'default.png',2,1,1),
-('Jersey Detroit Pistons 2005', 'Jersey de campeones', 'default.png',1,1,2),
-('Camiseta de voleybol', 'Camiseta deportiva', 'default.png',2,1,3);
+insert INTO tb_productos(nombre_producto, descripcion, imagen, id_categoria, id_tipo_producto, id_deporte,id_genero)
+VALUES('Jersey FC Barcelona', 'Jersey del mejor equipo', 'default.png',2,1,1,1),
+('Jersey Detroit Pistons 2005', 'Jersey de campeones', 'default.png',1,1,2,1),
+('Camiseta de voleybol', 'Camiseta deportiva', 'default.png',2,1,3,1);
 
 SELECT * FROM tb_productos;
 
@@ -141,24 +145,19 @@ id_talla INT,
 CONSTRAINT FK_talla_detalle_producto
 FOREIGN KEY(id_talla)
 REFERENCES tb_tallas (id_talla),
-id_genero INT,
-CONSTRAINT FK_genero_producto
-FOREIGN KEY(id_genero) 
-REFERENCES tb_generos (id_genero),
 id_producto INT,
 CONSTRAINT FK_detalleP_producto
 FOREIGN KEY(id_producto) 
 REFERENCES tb_productos (id_producto)
 );
 
-INSERT INTO tb_detalle_productos(precio, cantidad_disponible, id_talla, id_genero, id_producto)
-VALUES(29.99,15,1,1,1),
-(45,10,3,1,2),
-(20,20,2,2,3);
+INSERT INTO tb_detalle_productos(precio, cantidad_disponible, id_talla, id_producto)
+VALUES(29.99,15,1,1),
+(45,10,3,2),
+(20,20,2,3);
 
 SELECT * FROM tb_detalle_productos;
 SELECT * FROM tb_productos;
-
 
 
 
