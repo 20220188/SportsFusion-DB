@@ -23,15 +23,10 @@ nombre_cliente VARCHAR(50),
 telefono_cliente VARCHAR(9) unique,
 correo_cliente VARCHAR(100) unique,
 dirección_cliente VARCHAR(250),
-alias_cliente VARCHAR(50) unique,
 clave_cliente VARCHAR(64),
 estado_cliente BOOLEAN DEFAULT(1)
 );
 
-INSERT INTO tb_clientes(nombre_cliente, telefono_cliente,correo_cliente, dirección_cliente, alias_cliente, clave_cliente)
-VALUES('Kevin', '7795-9878', 'kevin10@gmail.com', 'La ibertad, El Salvador', 'kevin1234', '12345678'),
-('Dominic', '7788-3452', 'dominic10@gmail.com', 'San salvador, El Salvador', 'dominic1234', '12345678'),
-('Jafet', '7657-2323', 'jafetM10@gmail.com', 'San salvador, El Salvador', 'jafetM1234', '12345678');
 
 SELECT * FROM tb_clientes;
 
