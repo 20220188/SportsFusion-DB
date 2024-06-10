@@ -34,6 +34,8 @@ VALUES('Kevin', '7795-9878', 'kevin10@gmail.com', 'La ibertad, El Salvador', '12
 
 SELECT * FROM tb_clientes;
 
+
+
 CREATE TABLE tb_administradores(
 id_admin INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 nombre_admin VARCHAR(50),
@@ -55,7 +57,7 @@ INSERT INTO tb_tallas(talla)
 VALUES('M'), ('S'), ('L');
 
 
-/Tpo de producto es para definir si son coleccionable o de actualidad/
+/*Tpo de producto es para definir si son coleccionable o de actualidad*/
 CREATE TABLE tb_categorias(
 id_categoria INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 nombre_categoria VARCHAR(30) unique,
@@ -70,7 +72,7 @@ VALUES('Coleccionable', 'default.png', 'Articulos deportivos coleccionables'),
 ('De Actualidad', 'default.png', 'Articulos deportivos de temporadas recientes');
 
 
-/Categorias es para definir si son camisetas, medias, snekers, etc/
+/*Categorias es para definir si son camisetas, medias, snekers, etc*/
 CREATE TABLE tb_tipo_productos(
 id_tipo_producto INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 tipo_producto VARCHAR(25) unique
@@ -198,33 +200,17 @@ REFERENCES tb_deportes (id_deporte)
 );
 */
 
-CREATE TABLE tb_estado_pedidos(
-id_estado_pedido INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-estado_pedido VARCHAR(15) UNIQUE DEFAULT (1)
-);
-
-INSERT INTO tb_estado_pedidos(estado_pedido)
-VALUES('Pendiente'),('Finalizado'),('Cancelado');
-
 
 CREATE TABLE tb_pedidos (
 id_pedido INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-direccion_pedido VARCHAR(250),
 fecha_registro DATETIME NOT NULL DEFAULT current_timestamp(),
 id_cliente INT,
+estado_pedido ENUM ('Pendiente','Aceptado'),
 CONSTRAINT FK_pedido_cliente
 FOREIGN KEY(id_cliente)
-REFERENCES tb_clientes (id_cliente),
-id_estado_pedido INT DEFAULT(1),
-CONSTRAINT FK_estado_pedido
-FOREIGN KEY(id_estado_pedido)
-REFERENCES tb_estado_pedidos (id_estado_pedido)
+REFERENCES tb_clientes (id_cliente)
 );
 
-INSERT INTO tb_pedidos(direccion_pedido, id_cliente,id_estado_pedido)
-VALUES('San Salvador, El Salvador',2,1),
-('La Libertad',1,1),
-('San Salvador',3,1);
 
 SELECT * FROM tb_clientes;
 
@@ -233,7 +219,7 @@ id_detalle INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 cantidad_pedido SMALLINT(6),
 precio_pedido NUMERIC(5,2),
 id_pedido INT,
-CONSTRAINT FK_detalle_pedido
+CONSTRAINT FK_pedido_detalle_pedido
 FOREIGN KEY(id_pedido)
 REFERENCES tb_pedidos (id_pedido),
 id_producto INT, 
@@ -242,13 +228,64 @@ FOREIGN KEY(id_producto)
 REFERENCES tb_productos (id_producto)
 );
 
-INSERT INTO tb_detalle_pedidos(cantidad_pedido,precio_pedido,id_pedido,id_producto)
-VALUES(5,150,1,1), (5,225,2,2),(5,100,3,3);
+SELECT id_detalle, nombre_producto, precio_pedido, cantidad_pedido
+                FROM tb_detalle_pedidos 
+                INNER JOIN tb_pedidos USING(id_pedido)
+                INNER JOIN tb_productos USING(id_producto)
+                WHERE id_pedido = 4
+
+DELETE FROM tb_detalle_pedidos
+                WHERE id_detalle = 2 AND id_pedido = 2;
+                
+SELECT * FROM tb_pedidos WHERE id_pedido = 4;
 
 
+DELIMITER //
+
+CREATE PROCEDURE sp_actualizar_cantidad_producto(
+    IN p_id_detalle INT,
+    IN p_nueva_cantidad INT
+)
+BEGIN
+    DECLARE v_cantidad_anterior INT;
+    DECLARE v_id_producto INT;
+    DECLARE v_id_talla INT;
+    
+    -- Obtener la cantidad anterior y los identificadores del producto y la talla
+    SELECT cantidad_pedido, id_producto
+    INTO v_cantidad_anterior, v_id_producto
+    FROM tb_detalle_pedidos
+    WHERE id_detalle = p_id_detalle;
+
+    -- Calcular la diferencia de cantidad
+    SET @diferencia = p_nueva_cantidad - v_cantidad_anterior;
+
+    -- Actualizar la cantidad disponible en tb_detalle_productos
+    UPDATE tb_detalle_productos
+    SET cantidad_disponible = cantidad_disponible - @diferencia
+    WHERE id_producto = v_id_producto;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER trg_update_cantidad_pedido
+BEFORE UPDATE ON tb_detalle_pedidos
+FOR EACH ROW
+BEGIN
+    -- Llamar al procedimiento almacenado para actualizar la cantidad de productos
+    CALL sp_actualizar_cantidad_producto(OLD.id_detalle, NEW.cantidad_pedido);
+END //
+
+DELIMITER ;
+
+UPDATE tb_detalle_pedidos
+                SET cantidad_pedido = 1
+                WHERE id_detalle = 7 AND id_pedido = 4
 
 SELECT * FROM tb_productos;
-SELECT * FROM tb_deportes;
+SELECT * FROM tb_detalle_productos;
 SELECT * FROM tb_detalle_pedidos;
 SELECT * FROM tb_pedidos;
-SELECT * FROM tb_clientes;
+SELECT * FROM tb_clientes;
