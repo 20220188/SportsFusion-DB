@@ -11,9 +11,9 @@ imagen_deporte VARCHAR(25)
 );
 
 INSERT INTO tb_deportes(nombre_deporte, estado_retro, imagen_deporte)
-VALUES('Futbol', 1, 'default.png'),
-('Baloncesto', 1, 'default.png'),
-('Voleybol', 0, 'default.png');
+VALUES('Futbol', 1, '66649908c4213.jpg'),
+('Baloncesto', 1, '66649c2c8ac95.jpg'),
+('Voleybol', 0, '66649c3408966.jpg');
 
 
 
@@ -27,6 +27,10 @@ clave_cliente VARCHAR(64),
 estado_cliente BOOLEAN DEFAULT(1)
 );
 
+INSERT INTO tb_clientes(nombre_cliente, telefono_cliente,correo_cliente, dirección_cliente, clave_cliente)
+VALUES('Kevin', '7795-9878', 'kevin10@gmail.com', 'La ibertad, El Salvador', '12345678'),
+('Dominic', '7788-3452', 'dominic10@gmail.com', 'San salvador, El Salvador', '12345678'),
+('Jafet', '7657-2323', 'jafetM10@gmail.com', 'San salvador, El Salvador', '12345678');
 
 SELECT * FROM tb_clientes;
 
@@ -51,7 +55,7 @@ INSERT INTO tb_tallas(talla)
 VALUES('M'), ('S'), ('L');
 
 
-/*Tpo de producto es para definir si son coleccionable o de actualidad*/
+/Tpo de producto es para definir si son coleccionable o de actualidad/
 CREATE TABLE tb_categorias(
 id_categoria INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 nombre_categoria VARCHAR(30) unique,
@@ -66,7 +70,7 @@ VALUES('Coleccionable', 'default.png', 'Articulos deportivos coleccionables'),
 ('De Actualidad', 'default.png', 'Articulos deportivos de temporadas recientes');
 
 
-/*Categorias es para definir si son camisetas, medias, snekers, etc*/
+/Categorias es para definir si son camisetas, medias, snekers, etc/
 CREATE TABLE tb_tipo_productos(
 id_tipo_producto INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 tipo_producto VARCHAR(25) unique
@@ -121,9 +125,9 @@ REFERENCES tb_generos (id_genero)
 );
 
 insert INTO tb_productos(nombre_producto, descripcion, imagen, id_categoria, id_tipo_producto, id_deporte,id_genero)
-VALUES('Jersey FC Barcelona', 'Jersey del mejor equipo', 'default.png',2,1,1,1),
-('Jersey Detroit Pistons 2005', 'Jersey de campeones', 'default.png',1,1,2,1),
-('Camiseta de voleybol', 'Camiseta deportiva', 'default.png',2,1,3,1);
+VALUES('Jersey FC Barcelona', 'Jersey del mejor equipo', '6664991c37339.jpg',2,1,1,1),
+('Jersey Detroit Pistons 2005', 'Jersey de campeones', '666499134d74b.jpg',1,1,2,1),
+('Camiseta de voleybol', 'Camiseta deportiva', '66649c7abe307.jpg',2,1,3,1);
 
 SELECT * FROM tb_productos;
 
@@ -196,7 +200,7 @@ REFERENCES tb_deportes (id_deporte)
 
 CREATE TABLE tb_estado_pedidos(
 id_estado_pedido INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-estado_pedido VARCHAR(15) unique
+estado_pedido VARCHAR(15) UNIQUE DEFAULT (1)
 );
 
 INSERT INTO tb_estado_pedidos(estado_pedido)
@@ -211,7 +215,7 @@ id_cliente INT,
 CONSTRAINT FK_pedido_cliente
 FOREIGN KEY(id_cliente)
 REFERENCES tb_clientes (id_cliente),
-id_estado_pedido INT,
+id_estado_pedido INT DEFAULT(1),
 CONSTRAINT FK_estado_pedido
 FOREIGN KEY(id_estado_pedido)
 REFERENCES tb_estado_pedidos (id_estado_pedido)
@@ -243,6 +247,8 @@ VALUES(5,150,1,1), (5,225,2,2),(5,100,3,3);
 
 
 
-
-
-
+SELECT * FROM tb_productos;
+SELECT * FROM tb_deportes;
+SELECT * FROM tb_detalle_pedidos;
+SELECT * FROM tb_pedidos;
+SELECT * FROM tb_clientes;
