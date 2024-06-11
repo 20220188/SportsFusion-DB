@@ -182,7 +182,7 @@ estado_valoracion BOOLEAN
 INSERT INTO tb_valoraciones_productos(id_opinion,id_detalle_producto, id_cliente,estado_valoracion)
 VALUES(1,1,2,1), (2,2,1,1),(3,3,3,1),(1,3,2,1);
 
-
+SELECT * FROM tb_valoraciones_productos;
 
         
         
@@ -232,14 +232,8 @@ SELECT id_detalle, nombre_producto, precio_pedido, cantidad_pedido
                 FROM tb_detalle_pedidos 
                 INNER JOIN tb_pedidos USING(id_pedido)
                 INNER JOIN tb_productos USING(id_producto)
-                WHERE id_pedido = 4
-
-DELETE FROM tb_detalle_pedidos
-                WHERE id_detalle = 2 AND id_pedido = 2;
+                WHERE id_pedido = 4;
                 
-SELECT * FROM tb_pedidos WHERE id_pedido = 4;
-
-
 DELIMITER //
 
 CREATE PROCEDURE sp_actualizar_cantidad_producto(
@@ -249,17 +243,16 @@ CREATE PROCEDURE sp_actualizar_cantidad_producto(
 BEGIN
     DECLARE v_cantidad_anterior INT;
     DECLARE v_id_producto INT;
-    DECLARE v_id_talla INT;
     
-    -- Obtener la cantidad anterior y los identificadores del producto y la talla
+    -- Obtener la cantidad anterior y el identificador del producto
     SELECT cantidad_pedido, id_producto
     INTO v_cantidad_anterior, v_id_producto
     FROM tb_detalle_pedidos
     WHERE id_detalle = p_id_detalle;
-
+    
     -- Calcular la diferencia de cantidad
     SET @diferencia = p_nueva_cantidad - v_cantidad_anterior;
-
+    
     -- Actualizar la cantidad disponible en tb_detalle_productos
     UPDATE tb_detalle_productos
     SET cantidad_disponible = cantidad_disponible - @diferencia
@@ -278,11 +271,9 @@ BEGIN
     CALL sp_actualizar_cantidad_producto(OLD.id_detalle, NEW.cantidad_pedido);
 END //
 
-DELIMITER ;
+DELIMITER ;	
 
-UPDATE tb_detalle_pedidos
-                SET cantidad_pedido = 1
-                WHERE id_detalle = 7 AND id_pedido = 4
+
 
 SELECT * FROM tb_productos;
 SELECT * FROM tb_detalle_productos;
