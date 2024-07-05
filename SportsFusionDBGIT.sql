@@ -27,11 +27,6 @@ clave_cliente VARCHAR(64),
 estado_cliente BOOLEAN DEFAULT(1)
 );
 
-INSERT INTO tb_clientes(nombre_cliente, telefono_cliente,correo_cliente, dirección_cliente, clave_cliente)
-VALUES('Kevin', '7795-9878', 'kevin10@gmail.com', 'La ibertad, El Salvador', '12345678'),
-('Dominic', '7788-3452', 'dominic10@gmail.com', 'San salvador, El Salvador', '12345678'),
-('Jafet', '7657-2323', 'jafetM10@gmail.com', 'San salvador, El Salvador', '12345678');
-
 SELECT * FROM tb_clientes;
 
 
@@ -178,9 +173,6 @@ FOREIGN KEY(id_cliente)
 REFERENCES tb_clientes (id_cliente),
 estado_valoracion BOOLEAN
 );
-
-INSERT INTO tb_valoraciones_productos(id_opinion,id_detalle_producto, id_cliente,estado_valoracion)
-VALUES(1,1,2,1), (2,2,1,1),(3,3,3,1),(1,3,2,1);
 
 SELECT * FROM tb_valoraciones_productos;
 
