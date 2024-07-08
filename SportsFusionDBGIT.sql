@@ -157,42 +157,9 @@ SELECT * FROM tb_productos;
 
 
 
-CREATE TABLE tb_valoraciones_productos(
-id_valoracion_producto INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-id_opinion INT,
-CONSTRAINT FK_ipinion_valoracion_producto
-FOREIGN KEY(id_opinion)
-REFERENCES tb_opiniones (id_opinion),
-id_detalle_producto INT,
-CONSTRAINT FK_producto_valoracion_producto
-FOREIGN KEY(id_detalle_producto)
-REFERENCES tb_detalle_productos (id_detalle_producto),
-id_cliente INT,
-CONSTRAINT FK_cliente_valoracion_producto
-FOREIGN KEY(id_cliente)
-REFERENCES tb_clientes (id_cliente),
-estado_valoracion BOOLEAN
-);
-
-SELECT * FROM tb_valoraciones_productos;
-
-        
-        
-/*
-CREATE TABLE tb_productos_deportes(
-id_proDep INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-id_producto INT, 
-CONSTRAINT FK_producto_proDep
-FOREIGN KEY(id_producto)
-REFERENCES tb_productos (id_producto),
-id_deporte INT,
-CONSTRAINT FK_deportes_proDep
-FOREIGN KEY(id_deporte)
-REFERENCES tb_deportes (id_deporte)
-);
-*/
 
 
+            
 CREATE TABLE tb_pedidos (
 id_pedido INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 fecha_registro DATETIME NOT NULL DEFAULT current_timestamp(),
@@ -220,12 +187,38 @@ FOREIGN KEY(id_producto)
 REFERENCES tb_productos (id_producto)
 );
 
-SELECT id_detalle, nombre_producto, precio_pedido, cantidad_pedido
-                FROM tb_detalle_pedidos 
-                INNER JOIN tb_pedidos USING(id_pedido)
-                INNER JOIN tb_productos USING(id_producto)
-                WHERE id_pedido = 4;
-                
+CREATE TABLE tb_valoraciones(
+id_valoracion INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+comentario VARCHAR(250),
+valoracion INT,
+id_detalle int,
+CONSTRAINT FK_valoracion_productos
+FOREIGN KEY(id_detalle)
+REFERENCES tb_detalle_pedidos (id_detalle),
+id_cliente INT,
+CONSTRAINT FK_cliente_valoracion_producto
+FOREIGN KEY(id_cliente)
+REFERENCES tb_clientes (id_cliente),
+estado_valoracion BOOLEAN
+);
+
+SELECT * FROM tb_valoraciones;
+
+
+/*APARTADO PARA HACER LAS CONSULTAS QUE SE VAN A USAR EN LAS GRAFICAS*/
+
+/*SELECT PARA LA GRAFICA DE PRODUCTOS MEJORES VALORADOS*/     
+SELECT nombre_producto, AVG(valoracion) Promedio 
+FROM tb_valoraciones
+INNER JOIN 	tb_detalle_pedidos USING (id_detalle)
+INNER JOIN tb_productos USING(id_producto)
+GROUP BY nombre_producto
+ORDER BY promedio DESC LIMIT 5  
+
+SELECT id_valoracion
+        FROM tb_valoraciones 
+        WHERE id_detalle = 1 AND id_cliente = 1
+	             
 DELIMITER //
 
 CREATE PROCEDURE sp_actualizar_cantidad_producto(
