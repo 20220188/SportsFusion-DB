@@ -49,7 +49,7 @@ talla VARCHAR(10) unique
 );
 
 INSERT INTO tb_tallas(talla)
-VALUES('M'), ('S'), ('L');
+VALUES('M'), ('S'), ('L'),('No aplica');
 
 
 /*Tpo de producto es para definir si son coleccionable o de actualidad*/
@@ -74,7 +74,7 @@ tipo_producto VARCHAR(25) unique
 );
 
 INSERT INTO tb_tipo_productos(tipo_producto)
-VALUES('Jerseys'), ('Sneakers'), ('Zapatillas deportivas');
+VALUES('Jerseys'), ('Sneakers'), ('Zapatillas deportivas'),('Articulos varios');
 
 CREATE TABLE tb_opiniones(
 id_opinion INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -123,8 +123,14 @@ REFERENCES tb_generos (id_genero)
 
 insert INTO tb_productos(nombre_producto, descripcion, imagen, id_categoria, id_tipo_producto, id_deporte,id_genero)
 VALUES('Jersey FC Barcelona', 'Jersey del mejor equipo', '6664991c37339.jpg',2,1,1,1),
-('Jersey Detroit Pistons 2005', 'Jersey de campeones', '666499134d74b.jpg',1,1,2,1),
-('Camiseta de voleybol', 'Camiseta deportiva', '66649c7abe307.jpg',2,1,3,1);
+('Jersey Detroit Pistons 2005', 'Revive la gloria de los Detroit Pistons con esta auténtica camisa retro del 2005. Inspirada en la legendaria temporada en la que el equipo demostró su dominio en la NBA, esta prenda es perfecta para cualquier aficionado del baloncesto.', '666499134d74b.jpg',1,1,2,1),
+('Camiseta de voleybol', 'Camiseta deportiva', '66649c7abe307.jpg',2,1,3,1),
+('Jersey selección argentina', 'jersey del actual campeón del mundo', '6694571535e76.jpg',2,1,1,1),
+('Jersey Arsenal 2004v', 'Jsersey del Arsenal de los invencibles de la temporada 2004', '669457e9bef94.jpg',1,1,1,1),
+('Balón de volley', 'Balón marca Mikasa', '669458b5c35da.jpeg',2,4,3,2),
+('Rodilleras', 'Rodilleras de volley', 'default.png',2,4,3,2),
+('Jsersey Toronto Raptors', 'Jersey de los Toronto Raptors de la temporada 1999, con la dorsal 15 de Vince carter', '669459f95a009.jpg',1,1,2,1),
+('Zapatillas Lebron 19', 'Zapatillas Nike Lebron 19 low', '66945a8090912.jpeg',2,3,2,1);
 
 SELECT * FROM tb_productos;
 
@@ -150,7 +156,14 @@ REFERENCES tb_productos (id_producto)
 INSERT INTO tb_detalle_productos(precio, cantidad_disponible, id_talla, id_producto)
 VALUES(29.99,15,1,1),
 (45,10,3,2),
-(20,20,2,3);
+(20,20,2,3),
+(50, 10,1,4),
+(100, 30, 1,5),
+(40, 50, 4,6),
+(20,15,4,7),
+(150,17,3,8),
+(80,15,3,9);
+
 
 SELECT * FROM tb_detalle_productos;
 SELECT * FROM tb_productos;
@@ -199,7 +212,7 @@ id_cliente INT,
 CONSTRAINT FK_cliente_valoracion_producto
 FOREIGN KEY(id_cliente)
 REFERENCES tb_clientes (id_cliente),
-estado_valoracion BOOLEAN
+estado_valoracion BOOLEAN DEFAULT(1)
 );
 
 SELECT * FROM tb_valoraciones;
@@ -265,3 +278,4 @@ SELECT * FROM tb_detalle_productos;
 SELECT * FROM tb_detalle_pedidos;
 SELECT * FROM tb_pedidos;
 SELECT * FROM tb_clientes;
+SELECT * FROM tb_tallas;
